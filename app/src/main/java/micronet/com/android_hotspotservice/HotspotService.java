@@ -48,15 +48,16 @@ public class HotspotService extends Service {
         // re-enable Wifi AP
         WiFiApManager.setWiFiApState(context, true);
         try {
-            Thread.sleep(1000);
+			// wait 5 seconds to ensure that hotspot is in enabled (not enabling) status
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         Log.d(this.toString(), "getWiFiApState=" + WiFiApManager.getWifiApState(context));
-        if(WiFiApManager.getWifiApState(context)==WiFiApManager.WIFI_AP_STATE_ENABLED
-                ||WiFiApManager.getWifiApState(context)==WiFiApManager.WIFI_AP_STATE_ENABLING )
+        if(WiFiApManager.getWifiApState(context)==WiFiApManager.WIFI_AP_STATE_ENABLED)
         {
-
+			// hotspot must be in enabled status in order for FTP server to start on network
+            context.sendBroadcast(new Intent("be.ppareit.swiftp.ACTION_START_FTPSERVER"));
             Log.d(TAG, "enableWififunc:");
         }
     }
