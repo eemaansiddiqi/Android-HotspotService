@@ -39,6 +39,10 @@ public class WiFiApManager {
     public static boolean setHotspotName(String MicProdTestAP, Context context) {
         try {
             WifiManager wifiManager = (WifiManager) context.getSystemService(context.WIFI_SERVICE);
+            // if WiFi is on, turn it off
+            if(wifiManager.isWifiEnabled()) {
+                wifiManager.setWifiEnabled(false);
+            }
             WifiConfiguration wifiConfig = new WifiConfiguration();
             wifiConfig.SSID = MicProdTestAP;
             wifiConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
@@ -64,6 +68,10 @@ public class WiFiApManager {
         Boolean result = false;
         try {
             WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            // if WiFi is on, turn it off
+            if(wifiManager.isWifiEnabled()) {
+                wifiManager.setWifiEnabled(false);
+            }
             // using reflection to get method access for getWifiApConfiguration and setWifiApEnabled
             Method getWifiApMethod = wifiManager.getClass().getDeclaredMethod("getWifiApConfiguration");
             getWifiApMethod.setAccessible(true);
