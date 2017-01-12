@@ -39,12 +39,9 @@ public class WiFiApManager {
     public static boolean setHotspotName(String MicProdTestAP, Context context) {
         try {
             WifiManager wifiManager = (WifiManager) context.getSystemService(context.WIFI_SERVICE);
-            Method getConfigMethod = wifiManager.getClass().getMethod("getWifiApConfiguration");
-            WifiConfiguration wifiConfig = (WifiConfiguration) getConfigMethod.invoke(wifiManager);
-            wifiConfig.SSID =MicProdTestAP;
-            wifiConfig.preSharedKey="";
-            wifiConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
-            wifiConfig.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
+            WifiConfiguration wifiConfig = new WifiConfiguration();
+            wifiConfig.SSID = MicProdTestAP;
+            wifiConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
             Method setConfigMethod = wifiManager.getClass().getMethod("setWifiApConfiguration", WifiConfiguration.class);
             setConfigMethod.invoke(wifiManager, wifiConfig);
             return true;
