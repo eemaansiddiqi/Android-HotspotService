@@ -36,7 +36,7 @@ public class WiFiApManager {
         }
         return WIFI_AP_STATE_FAILED;
     }
-    public static boolean setHotspotName(String MicProdTestAP, Context context) {
+    public static boolean setHotspotName(Context context) {
         try {
             WifiManager wifiManager = (WifiManager) context.getSystemService(context.WIFI_SERVICE);
             // if WiFi is on, turn it off
@@ -44,7 +44,7 @@ public class WiFiApManager {
                 wifiManager.setWifiEnabled(false);
             }
             WifiConfiguration wifiConfig = new WifiConfiguration();
-            wifiConfig.SSID = MicProdTestAP;
+            wifiConfig.SSID = context.getString(R.string.SSID);
             wifiConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
             Method setConfigMethod = wifiManager.getClass().getMethod("setWifiApConfiguration", WifiConfiguration.class);
             setConfigMethod.invoke(wifiManager, wifiConfig);

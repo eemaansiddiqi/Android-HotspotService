@@ -84,7 +84,7 @@ public class HotspotService extends Service {
         IntentFilter intentFilter = new IntentFilter(WiFiApManager.WIFI_AP_STATE_CHANGED_ACTION);
         registerReceiver(wifiApStatusReceiver, intentFilter);
         context = this;
-        WiFiApManager.setHotspotName("MicProdTestAP",context);
+        WiFiApManager.setHotspotName(context);
         if (wifiApHandler == null) {
             wifiApHandler = new Handler(Looper.myLooper());
             wifiApHandler.post(wifiApCheck);
