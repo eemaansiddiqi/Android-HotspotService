@@ -63,7 +63,7 @@ public class HotspotService extends Service {
     }
     public void PushNotification(){
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_stat_name)
+                .setSmallIcon(R.drawable.ic_launcher_bw)
                 .setContentTitle("Hotspot Service")
                 .setContentText("Running");
         Intent resultIntent = new Intent(this, MainActivity.class);
