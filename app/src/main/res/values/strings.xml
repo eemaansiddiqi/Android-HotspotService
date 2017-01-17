@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Android-Hotspot service</string>
     <string name="service_description">Android-Hotspot Service</string>
+    <string name="SSID">MicProdTestAP</string>
 </resources>
