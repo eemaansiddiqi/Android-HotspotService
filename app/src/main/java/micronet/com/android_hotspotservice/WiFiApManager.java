@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
@@ -36,7 +37,7 @@ public class WiFiApManager {
         }
         return WIFI_AP_STATE_FAILED;
     }
-    public static boolean setHotspotName(Context context) {
+    public static boolean enableHotSpot(Context context) {
         try {
             WifiManager wifiManager = (WifiManager) context.getSystemService(context.WIFI_SERVICE);
             // if WiFi is on, turn it off
@@ -55,34 +56,17 @@ public class WiFiApManager {
             return false;
         }
     }
-    /**
-     * Start or stop the AccessPoint using the saved configuration.
-     * Uses reflection to access System API
-     *
-     * @param context Activity context
-     * @param enabled true to enable and false to disable
-     * @return {@code true} if the operation succeeds, {@code false} otherwise
-     */
-    public static boolean setWiFiApState(Context context, boolean enabled) {
 
-        Boolean result = false;
+    public static String getHotspotName(Context context) {
+        WifiManager wifiManager = (WifiManager) context.getSystemService(context.WIFI_SERVICE);
         try {
-            WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-            // if WiFi is on, turn it off
-            if(wifiManager.isWifiEnabled()) {
-                wifiManager.setWifiEnabled(false);
-            }
-            // using reflection to get method access for getWifiApConfiguration and setWifiApEnabled
+            // using reflection to get method access for getWifiApConfiguration
             Method getWifiApMethod = wifiManager.getClass().getDeclaredMethod("getWifiApConfiguration");
-            getWifiApMethod.setAccessible(true);
             WifiConfiguration wifiApConfig = (WifiConfiguration) getWifiApMethod.invoke(wifiManager);
-            Method setWifiApMethod = wifiManager.getClass().getMethod("setWifiApEnabled", WifiConfiguration.class, boolean.class);
-            // pass in the ObjectReceiver, WifiConfiguration, boolean
-            result = (Boolean) setWifiApMethod.invoke(wifiManager, wifiApConfig, enabled);
+            return wifiApConfig.SSID;
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return result;
+        return null;
     }
 }

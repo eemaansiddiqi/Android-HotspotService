@@ -31,7 +31,7 @@ public class HotspotService extends Service {
                 int state = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WiFiApManager.WIFI_AP_STATE_FAILED);
                 Log.d(this.toString(), "wifiApState=" + state);
                 if (state == WiFiApManager.WIFI_AP_STATE_DISABLED) {
-                    enableWiFi();
+                    enableWiFiAp();
                 }
             }
         }
@@ -44,9 +44,9 @@ public class HotspotService extends Service {
     private Context context;
     private static final int NOTIFY_ME_ID=1337;
 
-    private void enableWiFi(){
+    private void enableWiFiAp(){
         // re-enable Wifi AP
-        WiFiApManager.setWiFiApState(context, true);
+        WiFiApManager.enableHotSpot(context);
         try {
 			// wait 5 seconds to ensure that hotspot is in enabled (not enabling) status
             Thread.sleep(5000);
@@ -84,7 +84,7 @@ public class HotspotService extends Service {
         IntentFilter intentFilter = new IntentFilter(WiFiApManager.WIFI_AP_STATE_CHANGED_ACTION);
         registerReceiver(wifiApStatusReceiver, intentFilter);
         context = this;
-        WiFiApManager.setHotspotName(context);
+        WiFiApManager.enableHotSpot(context);
         if (wifiApHandler == null) {
             wifiApHandler = new Handler(Looper.myLooper());
             wifiApHandler.post(wifiApCheck);
@@ -103,7 +103,7 @@ public class HotspotService extends Service {
                         wifiApHandler.postDelayed(this, TEN_SECONDS);
                     case WiFiApManager.WIFI_AP_STATE_DISABLED: //WiFi AP is currently disabled
                         //Re-enable the WiFi Hotspot state
-                        enableWiFi();
+                        enableWiFiAp();
                         /* WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
                            wifi.setWifiEnabled(true);*/ //To disable Wi-Fi
                         //Seting post to 60s
@@ -119,11 +119,16 @@ public class HotspotService extends Service {
                         break;
                     case WiFiApManager.WIFI_AP_STATE_FAILED://WiFi Ap failed
                         // Re enable the WiFi Hotspot state
-                        enableWiFi();
+                        enableWiFiAp();
                         wifiApHandler.postDelayed(this, SIXTY_SECONDS);
                         break;
                     default:
                         break;
+                }
+
+                // SSID value shouldn't change
+                if(!getString(R.string.SSID).equals(WiFiApManager.getHotspotName(context))) {
+                    enableWiFiAp();
                 }
             } catch (Exception e) {
                 Log.d(TAG, "run: bh");
